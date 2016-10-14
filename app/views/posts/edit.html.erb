@@ -1,0 +1,12 @@
+<div class="col-md-4 col-md-offset-4">
+  <h1>修改Meetup</h1>
+
+  <hr>
+  <%= simple_form_for @post do |f| %>
+    <div class="form-post">
+      <%= f.input :title %>
+      <%= f.input :description %>
+    </div>
+    <%= f.submit "Submit", class: "btn btn-primary", data: { disable_with: "Submitting..." } %>
+  <% end %>
+</div>
