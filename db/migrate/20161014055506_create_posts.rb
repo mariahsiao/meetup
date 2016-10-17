@@ -3,8 +3,6 @@ class CreatePosts < ActiveRecord::Migration
     create_table :posts do |t|
       t.string :title
       t.text :description
-      t.datetime :date
-      t.text :location
 
       t.timestamps null: false
     end
