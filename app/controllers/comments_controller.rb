@@ -1,12 +1,13 @@
 class CommentsController < ApplicationController
   before_action :set_comment, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!, only: [:create, :destroy]
 
   # POST /comments
   # POST /comments.json
   def create
     @post = Post.find(params[:post_id])
     @comment = @post.comments.new(comment_params)
-    @comment_user = current_user
+    @comment.user_id = current_user.id
 
     respond_to do |format|
       if @comment.save
@@ -27,6 +28,10 @@ class CommentsController < ApplicationController
       format.html { redirect_to :back, notice: 'Comment was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def floor_of_comments(comment)
+    comment_index = comment_ids.index(comment.id)
   end
 
   private
