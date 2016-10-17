@@ -3,9 +3,9 @@ require 'rails_helper'
 RSpec.describe PostsController, type: :controller do
   describe "GET index" do
     it "assigns @posts and render template" do
-      post1 = Post.create(title: "foo", description: "bar")
-      post2 = Post.create(title: "bar", description: "foo")
 
+      post1 = FactoryGirl.create(:post)
+      post2 = FactoryGirl.create(:post)
       get :index
 
       expect(assigns[:posts]).to eq([post1,post2])
