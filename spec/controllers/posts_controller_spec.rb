@@ -14,7 +14,7 @@ RSpec.describe PostsController, type: :controller do
     it "render_template" do
       post1 = FactoryGirl.create(:post)
       post2 = FactoryGirl.create(:post)
-      get:index
+      get :index
       expect(response).to render_template("index")
     end
   end
@@ -23,31 +23,46 @@ RSpec.describe PostsController, type: :controller do
 
     it "assign @post" do
       post = FactoryGirl.create(:post)
-      get :show, params: { id: post.id }
+      get :show, { id: post.id }
       expect(assigns[:post]).to eq(post)
     end
 
     it "render_template" do
       post = FactoryGirl.create(:post)
-      get :show, params: { id: post.id }
+      get :show, { id: post.id }
       expect(response).to render_template("show")
     end
   end
 
-  # describe "GET new" do
+  describe "GET new" do
 
-  #   it "assign @post" do
-  #     post = FactoryGirl.build(:post)
-  #     get :new
-  #     expect(assigns(:post)).to be_new_record
-  #     expect(assigns(:post)).to be_instance_of(Post)
-  #   end
+    context "when user login" do
+      it "assign @post" do
+        user = FactoryGirl.create(:user)
+        sign_in user
 
-  #   it "render_template" do
-  #     post = FactoryGirl.build(:post)
-  #     get :new
-  #     expect(response).to render_template("new")
-  #   end
+        post = FactoryGirl.build(:post)
+        get :new
+        expect(assigns(:post)).to be_new_record
+        expect(assigns(:post)).to be_instance_of(Post)
+      end
 
-  # end
+      it "render_template" do
+        user = FactoryGirl.create(:user)
+        sign_in user
+
+        post = FactoryGirl.build(:post)
+        get :new
+        expect(response).to render_template("new")
+      end
+    end
+
+    context "when user not login" do
+      it "redirect_to new_user_session_path" do
+        get :new
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+  end
+
 end
