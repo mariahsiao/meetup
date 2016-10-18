@@ -93,7 +93,7 @@ RSpec.describe PostsController, type: :controller do
       it "redirect to posts_path" do
         post = FactoryGirl.build(:post)
 
-        post :create, course: FactoryGirl.attributes_for(:post)
+        post :create, post: FactoryGirl.attributes_for(:post)
 
         expect(response).to redirect_to posts_path
       end
