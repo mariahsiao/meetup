@@ -71,7 +71,7 @@ RSpec.describe PostsController, type: :controller do
       before { sign_in_user }
 
       it "doesn't create a record" do
-        expect{ post :create, post: { :description => "bar" }}.to change{Course.count}.by(0)
+        expect{ post :create, post: { :description => "bar" }}.to change{Post.count}.by(0)
       end
 
       it "render new_template"
@@ -87,23 +87,15 @@ RSpec.describe PostsController, type: :controller do
       it "create a new post record" do
         post = FactoryGirl.build(:post)
 
-        expect{ post :create, post: FactoryGirl.attributes_for(:post)}.to change{ Course.count}.by(1)
+        expect{ post :create, post: FactoryGirl.attributes_for(:post)}.to change{ Post.count}.by(1)
       end
 
       it "redirect to posts_path" do
         post = FactoryGirl.build(:post)
 
         post :create, post: FactoryGirl.attributes_for(:post)
-
         expect(response).to redirect_to posts_path
       end
-    end
-
-    it_behaves_like "requrire_sign_in" do
-      let(:action) {
-        post = FactoryGirl.build(:course)
-        post :create, post: FactoryGirl.attributes_for(:post)
-      }
     end
   end
 
