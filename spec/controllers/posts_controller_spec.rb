@@ -74,7 +74,7 @@ RSpec.describe PostsController, type: :controller do
         expect{ post :create, post: { :description => "bar" }}.to change{Post.count}.by(0)
       end
 
-      it "render new_template"
+      it "render new_template" do
         post :create, post: { :description => "bar" }
 
         expect(response).to render_template("new")
@@ -82,16 +82,14 @@ RSpec.describe PostsController, type: :controller do
     end
 
     context "when post have a title" do
-      befoer {sign_in_user}
+      before {sign_in_user}
 
       it "create a new post record" do
-        post = FactoryGirl.build(:post)
 
         expect{ post :create, post: FactoryGirl.attributes_for(:post)}.to change{ Post.count}.by(1)
       end
 
       it "redirect to posts_path" do
-        post = FactoryGirl.build(:post)
 
         post :create, post: FactoryGirl.attributes_for(:post)
         expect(response).to redirect_to posts_path
