@@ -37,7 +37,7 @@ RSpec.describe PostsController, type: :controller do
   describe "GET new" do
 
     let(:user) { FactoryGirl.create(:user) }
-    let(:post) { FactoryGirl.build(:post) }
+    let(:post) { post = FactoryGirl.build(:post) }
 
     context "when user login" do
       before do
@@ -55,12 +55,10 @@ RSpec.describe PostsController, type: :controller do
       end
     end
 
-    context "when user not login" do
-      it "redirect_to new_user_session_path" do
+    it_behaves_like "require_sign_in" do
+      let(:action) {
         get :new
-
-        expect(response).to redirect_to new_user_session_path
-      end
+      }
     end
   end
 
@@ -74,7 +72,7 @@ RSpec.describe PostsController, type: :controller do
         expect{ post :create, post: { :description => "bar" }}.to change{Post.count}.by(0)
       end
 
-      it "render new_template"
+      it "render new_template" do
         post :create, post: { :description => "bar" }
 
         expect(response).to render_template("new")
@@ -82,21 +80,50 @@ RSpec.describe PostsController, type: :controller do
     end
 
     context "when post have a title" do
-      befoer {sign_in_user}
+      before {sign_in_user}
 
       it "create a new post record" do
-        post = FactoryGirl.build(:post)
 
         expect{ post :create, post: FactoryGirl.attributes_for(:post)}.to change{ Post.count}.by(1)
       end
 
       it "redirect to posts_path" do
-        post = FactoryGirl.build(:post)
 
         post :create, post: FactoryGirl.attributes_for(:post)
         expect(response).to redirect_to posts_path
       end
     end
+
+    it "create a post for user" do
+
+      post :create, post: FactoryGirl.attributes_for(:post)
+      expect(Post.last.user).to eq(user)
+    end
   end
+
+  # describe "GET edit" do
+  #   let(:user) { FactoryGirl.create(:user) }
+  #   let(:post) { FactoryGirl.create(:post) }
+
+  #   before { sign_in_user }
+
+  #   it "assign post" do
+  #     get :edit , id: post.id
+
+  #     expect(assigns[:post]).to eq(course)
+  #   end
+
+  #   it "render_template" do
+  #     get :edit , id: post.id
+
+  #     expect(response).to render_template("edit")
+  #   end
+
+  #   it_behaves_like "require_sign_in" do
+  #     let(:action) {
+  #       get :edit , id: post.id
+  #     }
+  #   end
+  # end
 
 end
